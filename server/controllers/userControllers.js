@@ -37,4 +37,34 @@ const registerUser = asyncHandler(async (req, res) => {
     res.status(201).json({ message: "User registered successfully", user: newUser });
 });
 
-module.exports = { registerUser };
+const loginUser = asyncHandler(async(req, res) => {
+    const {email, password} = req.body;
+    if(!email || !password){
+        res.status(400);
+        throw new Error("please fill all fields");
+    }
+    const user = await User.findOne({email});
+    if(!user){
+        return res.status(401).json({ message: "Invalid credentials" });
+    }
+    const passwordMatch  = await bcrypt.compare(password, user.password);
+    if(!passwordMatch){
+        return res.status(400).json({message:"password did not match"});
+    } 
+    
+    res.status(200).json({
+        message: "Login successful",
+        user: {
+            id: user._id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            phoneNumber: user.phoneNumber,
+            bloodGroup: user.bloodGroup,
+            age: user.age,
+            gender: user.gender,
+        },
+    });
+})
+
+module.exports = { registerUser , loginUser};
