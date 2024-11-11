@@ -23,9 +23,6 @@ const storage = multer.diskStorage({
       cb(null, file.fieldname + '-' + uniqueSuffix)
     }
   })
-
-  console.log("dsfjd")
-  
   const upload = multer({ storage: storage })
 
 app.use(express.json());
