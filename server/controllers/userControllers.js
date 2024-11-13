@@ -66,5 +66,16 @@ const loginUser = asyncHandler(async(req, res) => {
         },
     });
 })
+const getUserProfile = asyncHandler(async(req,res)=>{
+    try{
+        const email = req.body;
+        const data = await user.findOne(email);
+        if(!data) return res.status(401).json({err});
+         return res.status(200).json({data});
+    }
+    catch{
+        return res.status(500).json({err});
+    }
 
+});
 module.exports = { registerUser , loginUser};
